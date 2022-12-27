@@ -1,0 +1,27 @@
+{"properties": [
+  {
+    "name": "batch.cron.like",
+    "type": "java.lang.String",
+    "description": "A description for 'batch.cron.like'"
+  },
+  {
+    "name": "batch.cron.tweet",
+    "type": "java.lang.String",
+    "description": "A description for 'batch.cron.tweet'"
+  },
+  {
+    "name": "file-path.resources.user-info",
+    "type": "java.lang.String",
+    "description": "A description for 'file-path.resources.user-info'"
+  },
+  {
+    "name": "file-path.resources.token",
+    "type": "java.lang.String",
+    "description": "A description for 'file-path.resources.token'"
+  },
+  {
+    "name": "file-path.resources.pokedex",
+    "type": "java.lang.String",
+    "description": "A description for 'file-path.resources.pokedex'"
+  }
+]}
