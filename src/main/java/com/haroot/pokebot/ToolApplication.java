@@ -7,11 +7,11 @@ import org.springframework.context.ConfigurableApplicationContext;
 import com.haroot.pokebot.tools.OAuth20GetAccessToken;
 
 /**
-* PokeBotのライフサイクル外のツール実行クラス
-*
-* @author sekiharuhito
-*
-*/
+ * PokeBotのライフサイクル外のツール実行クラス
+ *
+ * @author sekiharuhito
+ *
+ */
 @SpringBootApplication
 public class ToolApplication {
 	public static void main(String[] args) {

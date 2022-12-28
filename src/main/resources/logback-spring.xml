@@ -10,9 +10,11 @@
 	<property name="LOG_PATTERN"
 		value="%d{yyyy/MM/dd HH:mm:ss.SSS} [%t] %-5le %lo{36} - %msg %n"></property>
 
-	<root level="INFO">
-		<appender-ref ref="CONSOLE"></appender-ref>
-	</root>
+	<springProfile name="local">
+		<root level="INFO">
+			<appender-ref ref="CONSOLE"></appender-ref>
+		</root>
+	</springProfile>
 	<!-- 環境ごとに出力設定 -->
 	<springProfile name="production">
 		<!-- appenderが"FILE"の場合の設定 -->
