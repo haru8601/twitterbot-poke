@@ -3,8 +3,8 @@ package com.haroot.pokebot.twitterapi.auth;
 import org.springframework.stereotype.Component;
 
 import com.haroot.pokebot.config.ResourcePathConfig;
+import com.haroot.pokebot.config.UserInfoConfig;
 import com.haroot.pokebot.dto.TokenDto;
-import com.haroot.pokebot.dto.UserInfoDto;
 import com.haroot.pokebot.utils.MapperUtils;
 import com.twitter.clientlib.TwitterCredentialsOAuth2;
 import com.twitter.clientlib.api.TwitterApi;
@@ -22,18 +22,18 @@ import lombok.RequiredArgsConstructor;
 public class AuthVia20AuthCode {
 	private final ResourcePathConfig resourcePathConfig;
 	private final MaintainToken maintainToken;
+	private final UserInfoConfig userInfoConfig;
 
 	public TwitterApi init() {
 		// read token file
 		TokenDto tokenDto = MapperUtils.readJson(resourcePathConfig.getToken(), TokenDto.class);
-		UserInfoDto userInfoDto = MapperUtils.readJson(resourcePathConfig.getUserInfo(), UserInfoDto.class);
-		if (tokenDto == null || userInfoDto == null) {
+		if (tokenDto == null) {
 			return null;
 		}
 
 		// initialize credentials
-		TwitterCredentialsOAuth2 credentials = new TwitterCredentialsOAuth2(userInfoDto.getClientId(),
-				userInfoDto.getClientSecret(), tokenDto.getAccessToken(), tokenDto.getRefreshToken());
+		TwitterCredentialsOAuth2 credentials = new TwitterCredentialsOAuth2(userInfoConfig.getClientId(),
+				userInfoConfig.getClientSecret(), tokenDto.getAccessToken(), tokenDto.getRefreshToken());
 
 		// create instance
 		TwitterApi apiInstance = new TwitterApi(credentials);

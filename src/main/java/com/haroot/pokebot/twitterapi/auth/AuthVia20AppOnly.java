@@ -2,9 +2,7 @@ package com.haroot.pokebot.twitterapi.auth;
 
 import org.springframework.stereotype.Component;
 
-import com.haroot.pokebot.config.ResourcePathConfig;
-import com.haroot.pokebot.dto.UserInfoDto;
-import com.haroot.pokebot.utils.MapperUtils;
+import com.haroot.pokebot.config.UserInfoConfig;
 import com.twitter.clientlib.TwitterCredentialsBearer;
 import com.twitter.clientlib.api.TwitterApi;
 
@@ -19,11 +17,10 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 public class AuthVia20AppOnly {
-	private final ResourcePathConfig resourcePathConfig;
+	private final UserInfoConfig userInfoConfig;
 
 	public TwitterApi init() {
-		UserInfoDto userInfoDto = MapperUtils.readJson(resourcePathConfig.getUserInfo(), UserInfoDto.class);
-		String bearer = userInfoDto.getBearer();
+		String bearer = userInfoConfig.getBearer();
 		TwitterCredentialsBearer credentials = new TwitterCredentialsBearer(bearer);
 		TwitterApi apiInstance = new TwitterApi(credentials);
 		return apiInstance;

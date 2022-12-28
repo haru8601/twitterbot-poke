@@ -1,4 +1,4 @@
-package com.haroot.pokebot.others;
+package com.haroot.pokebot.tools;
 /*
 Copyright 2020 Twitter, Inc.
 SPDX-License-Identifier: Apache-2.0
@@ -22,14 +22,19 @@ Do not edit the class manually.
 
 import java.util.Scanner;
 
+import org.springframework.stereotype.Component;
+
 import com.github.scribejava.core.model.OAuth2AccessToken;
 import com.github.scribejava.core.pkce.PKCE;
 import com.github.scribejava.core.pkce.PKCECodeChallengeMethod;
+import com.haroot.pokebot.config.ResourcePathConfig;
+import com.haroot.pokebot.config.UserInfoConfig;
 import com.haroot.pokebot.dto.TokenDto;
-import com.haroot.pokebot.dto.UserInfoDto;
 import com.haroot.pokebot.utils.MapperUtils;
 import com.twitter.clientlib.TwitterCredentialsOAuth2;
 import com.twitter.clientlib.auth.TwitterOAuth20Service;
+
+import lombok.RequiredArgsConstructor;
 
 /**
  * 新規AccessToken取得(Javaプログラム)
@@ -37,21 +42,22 @@ import com.twitter.clientlib.auth.TwitterOAuth20Service;
  * @author sekiharuhito
  *
  */
+@Component
+@RequiredArgsConstructor
 public class OAuth20GetAccessToken {
-	private final static String JSON_PATH = "src/main/resources/static/json";
-	private final static String TOKEN_FILE = "/token.json";
-	private final static String USER_INFO_FILE = "/userInfo.json";
+	private final ResourcePathConfig resourcePathConfig;
+	private final UserInfoConfig userInfoConfig;
 
-	public static void main(String[] args) {
-		TokenDto tokenDto = MapperUtils.readJson(JSON_PATH + TOKEN_FILE, TokenDto.class);
-		UserInfoDto userInfoDto = MapperUtils.readJson(JSON_PATH + USER_INFO_FILE, UserInfoDto.class);
-		if (tokenDto == null || userInfoDto == null) {
+	public void getToken() {
+		// read token file
+		TokenDto tokenDto = MapperUtils.readJson(resourcePathConfig.getToken(), TokenDto.class);
+		if (tokenDto == null) {
 			return;
 		}
-		TwitterCredentialsOAuth2 credentials = new TwitterCredentialsOAuth2(userInfoDto.getClientId(),
-				userInfoDto.getClientSecret(), tokenDto.getAccessToken(), tokenDto.getRefreshToken());
+		TwitterCredentialsOAuth2 credentials = new TwitterCredentialsOAuth2(userInfoConfig.getClientId(),
+				userInfoConfig.getClientSecret(), tokenDto.getAccessToken(), tokenDto.getRefreshToken());
 
-		OAuth2AccessToken accessToken = getAccessToken(credentials, userInfoDto);
+		OAuth2AccessToken accessToken = getAccessToken(credentials);
 		if (accessToken == null) {
 			System.out.println("token is null");
 			return;
@@ -62,11 +68,10 @@ public class OAuth20GetAccessToken {
 		credentials.setTwitterOauth2RefreshToken(accessToken.getRefreshToken());
 	}
 
-	public static OAuth2AccessToken getAccessToken(TwitterCredentialsOAuth2 credentials, UserInfoDto userInfoDto) {
-		final String REDIRECT_URL = userInfoDto.getRedirectUrl();
-		final String ACCESS_SCOPE = userInfoDto.getAccessScope();
+	public OAuth2AccessToken getAccessToken(TwitterCredentialsOAuth2 credentials) {
 		TwitterOAuth20Service service = new TwitterOAuth20Service(credentials.getTwitterOauth2ClientId(),
-				credentials.getTwitterOAuth2ClientSecret(), REDIRECT_URL, ACCESS_SCOPE);
+				credentials.getTwitterOAuth2ClientSecret(), userInfoConfig.getRedirectUrl(),
+				userInfoConfig.getAccessScope());
 
 		OAuth2AccessToken accessToken = null;
 		try (final Scanner in = new Scanner(System.in, "UTF-8");) {

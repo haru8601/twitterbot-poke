@@ -20,16 +20,24 @@
 
 下記のプロパティを含む必要があります。
 
-```
+```sh
 .
 ├── batch
 │   └── cron
-│       ├── like
-│       └── tweet
-└── file-path
-    └── resources
-        ├── base-url
-        ├── user-info
-        ├── token
-        └── pokedex
+│       ├── like # 0 0 20 * * *
+│       └── tweet # 0 0 20 * * *
+├── file-path
+│   └── resources
+│       ├── base-url # src/main/resources/static
+│       ├── token # /token.json
+│       └── pokedex # /pokedex.json
+├── path
+│   └── log # /hoge/log/app.log
+└── user-info
+    ├── my-id # 1234567890123456789
+    ├── client-id # XXXXXZZZZZaaaaa00000xxxxxYYYYXXXXX
+    ├── client-secret # 略
+    ├── bearer # 略
+    ├── redirect-url # https://haroot.net
+    └── access-scope # offline.access tweet.read tweet.write users.read like.write
 ```

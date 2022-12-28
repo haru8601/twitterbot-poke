@@ -1,15 +1,11 @@
 package com.haroot.pokebot.batch;
 
-import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.List;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.haroot.pokebot.config.ResourcePathConfig;
-import com.haroot.pokebot.dto.UserInfoDto;
+import com.haroot.pokebot.config.UserInfoConfig;
 import com.haroot.pokebot.twitterapi.auth.AuthVia20AuthCode;
 import com.haroot.pokebot.twitterapi.utils.TweetUtils;
 import com.haroot.pokebot.twitterapi.utils.Tweets;
@@ -22,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class LikeBatch {
 	private final AuthVia20AuthCode authVia20AuthCode;
-	private final ResourcePathConfig resourcePathConfig;
+	private final UserInfoConfig userInfoConfig;
 
 	@Scheduled(cron = "${batch.cron.like}")
 	public void like() {
@@ -55,15 +51,7 @@ public class LikeBatch {
 		System.out.println("like the following ids.");
 
 		// なぜか自分のIDを送る必要がある
-		UserInfoDto userInfoDto;
-		try {
-			userInfoDto = new ObjectMapper().readValue(Paths.get(resourcePathConfig.getUserInfo()).toFile(),
-					UserInfoDto.class);
-		} catch (IOException ex) {
-			ex.printStackTrace();
-			return;
-		}
-		String myId = userInfoDto.getMyId();
+		String myId = userInfoConfig.getMyId();
 
 		for (int i = 0; i < loopLen; i++) {
 			String tweetId = idList.get(i);
