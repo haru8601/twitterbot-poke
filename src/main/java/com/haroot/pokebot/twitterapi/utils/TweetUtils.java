@@ -23,6 +23,7 @@ public class TweetUtils {
 	 * @return 抽出後のツイートIDリスト
 	 */
 	public static List<String> getFamousTweets(List<Tweet> tweetList) {
+		log.info("start selecting famous tweets.");
 		List<String> idList = new ArrayList<>();
 		// select famous tweet
 		for (Tweet tweet : tweetList) {
@@ -31,7 +32,7 @@ public class TweetUtils {
 				idList.add(tweet.getId());
 			}
 		}
-		log.info("selected popular tweets.");
+		log.info("end selecting famous tweets.");
 		return idList;
 	}
 }

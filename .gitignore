@@ -13,7 +13,7 @@ build/
 .history
 application*.yaml
 token.json
-test.log
+*.log
 
 ### STS ###
 .apt_generated

@@ -44,9 +44,9 @@ public class ReplyExecutor {
 		log.info("initialized apiInstance");
 
 		// メイン処理
-		log.info("start tweet.");
+		log.info("start tweet");
 		// find target poke
-		List<PokedexDto> pokeList = MapperUtils.readJson(resourcePathConfig.getPokedex(),
+		List<PokedexDto> pokeList = MapperUtils.readJsonAsList(resourcePathConfig.getPokedex(),
 				new TypeReference<List<PokedexDto>>() {
 				});
 		PokedexDto targetPoke = PokeUtils.findPoke(pokeList, receivedTweet.getText());

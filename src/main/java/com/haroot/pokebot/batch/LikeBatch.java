@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.haroot.pokebot.config.UserInfoConfig;
 import com.haroot.pokebot.twitterapi.auth.AuthVia20AuthCode;
+import com.haroot.pokebot.twitterapi.auth.TokenUtils;
 import com.haroot.pokebot.twitterapi.utils.TweetUtils;
 import com.haroot.pokebot.twitterapi.utils.Tweets;
 import com.twitter.clientlib.api.TwitterApi;
@@ -42,7 +43,12 @@ public class LikeBatch {
 		Get2TweetsSearchRecentResponse searchRes = Tweets.searchTweet(apiInstance, query);
 		if (searchRes == null) {
 			log.error("there is no tweet...");
-			return;
+			if (!TokenUtils.refreshToken(apiInstance)) {
+				// トークンをrefreshできなければ終了
+				return;
+			}
+			log.info("start searching tweet again");
+			searchRes = Tweets.searchTweet(apiInstance, query);
 		}
 
 		// select some tweets

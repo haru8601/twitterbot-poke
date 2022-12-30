@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MapperUtils {
 	public static <T> T readJson(String jsonPath, Class<T> type) {
+		log.info("start reading json");
 		// 引数の型のインスタンス生成
 		T instance;
 		try {
@@ -20,10 +21,12 @@ public class MapperUtils {
 			log.error(ex.getMessage(), ex);
 			return null;
 		}
+		log.info("end reading json");
 		return instance;
 	}
 
-	public static <T> List<T> readJson(String jsonPath, TypeReference<List<T>> typeReference) {
+	public static <T> List<T> readJsonAsList(String jsonPath, TypeReference<List<T>> typeReference) {
+		log.info("start reading json(typeof list)");
 		// 引数の型のインスタンス生成
 		List<T> instanceList;
 		try {
@@ -32,6 +35,7 @@ public class MapperUtils {
 			log.error(ex.getMessage(), ex);
 			return null;
 		}
+		log.info("end reading json(typeof list)");
 		return instanceList;
 	}
 

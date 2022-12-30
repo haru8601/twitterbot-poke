@@ -25,19 +25,14 @@ public class PokeUtils {
 	 * @return 今日のポケモン
 	 */
 	public static PokedexDto getTodaysPoke(List<PokedexDto> pokeAllNode) {
-//		// 基準日
-//		LocalDateTime standarDateTime = LocalDateTime.of(2022, 5, 1, 0, 0).plusDays(4);
-//		// 今日の日付
-//		LocalDateTime nowTime = LocalDateTime.now();
-//		// 日数の差分で今日のポケモンを決める
-//		Duration duration = Duration.between(standarDateTime, nowTime);
-//		// 全ポケモン数
+		log.info("start getting today's poke.");
+		// 全ポケモン数
 		int pokeSumCount = pokeAllNode.size();
-//		int diffDay = (int) (duration.toDays() % pokeSumCount);
 
 		// 今日のポケモン
 		PokedexDto todayPoke = pokeAllNode.get(new Random().nextInt(pokeSumCount));
 		log.info("today's pokemon: " + todayPoke.getName().getJapanese());
+		log.info("end getting today's poke.");
 		return todayPoke;
 	}
 
@@ -48,6 +43,7 @@ public class PokeUtils {
 	 * @return アナグラム
 	 */
 	public static String swapName(String oldStr) {
+		log.info("start swapping name");
 		int strLen = oldStr.length();
 
 		// ポケモンの文字列をcharリストにする
@@ -80,6 +76,7 @@ public class PokeUtils {
 		}
 		String swappedName = newName.toString();
 		log.info("new name: " + swappedName);
+		log.info("end swapping name");
 		return swappedName;
 	}
 

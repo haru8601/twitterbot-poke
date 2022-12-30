@@ -6,8 +6,10 @@
 	<include
 		resource="org/springframework/boot/logging/logback/console-appender.xml"></include>
 	<timestamp key="LOG_DATE" datePattern="yyyyMMdd"></timestamp>
-	<springProperty name="LOG_FILE" source="path.log" />
-	<property name="LOG_PATTERN"
+	<springProperty name="LOG_FILE" source="path.log.all" />
+	<springProperty name="LOG_FILE_ERROR"
+		source="path.log.error" />
+	<property name="MSG_PATTERN"
 		value="%d{yyyy/MM/dd HH:mm:ss.SSS} [%t] %-5le %lo{36} - %msg %n"></property>
 
 	<springProfile name="local">
@@ -16,12 +18,12 @@
 		</root>
 	</springProfile>
 	<!-- 環境ごとに出力設定 -->
-	<springProfile name="production">
+	<springProfile name="local,production">
 		<!-- appenderが"FILE"の場合の設定 -->
-		<appender name="FILE"
+		<appender name="FILE_INFO"
 			class="ch.qos.logback.core.rolling.RollingFileAppender">
 			<encoder>
-				<pattern>${LOG_PATTERN}</pattern>
+				<pattern>${MSG_PATTERN}</pattern>
 			</encoder>
 			<!-- 出力先ファイルは"LOG_FILE"のパス -->
 			<file>${LOG_FILE}</file>
@@ -31,8 +33,27 @@
 				<maxHistory>7</maxHistory>
 			</rollingPolicy>
 		</appender>
+		<appender name="FILE_ERROR"
+			class="ch.qos.logback.core.rolling.RollingFileAppender">
+			<encoder>
+				<pattern>${MSG_PATTERN}</pattern>
+			</encoder>
+			<filter class="ch.qos.logback.classic.filter.LevelFilter">
+				<level>ERROR</level>
+				<onMathch>ACCEPT</onMathch>
+				<onMismatch>DENY</onMismatch>
+			</filter>
+			<!-- 出力先ファイルは"LOG_FILE"のパス -->
+			<file>${LOG_FILE_ERROR}</file>
+			<rollingPolicy
+				class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+				<fileNamePattern>${LOG_FILE_ERROR}.%d</fileNamePattern>
+				<maxHistory>7</maxHistory>
+			</rollingPolicy>
+		</appender>
 		<root level="INFO">
-			<appender-ref ref="FILE"></appender-ref>
+			<appender-ref ref="FILE_INFO"></appender-ref>
+			<appender-ref ref="FILE_ERROR"></appender-ref>
 		</root>
 	</springProfile>
 

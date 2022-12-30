@@ -60,8 +60,13 @@
     "description": "A description for 'file-path.resources.base-url'"
   },
   {
-    "name": "path.log",
+    "name": "path.log.all",
     "type": "java.lang.String",
-    "description": "A description for 'path.log'"
+    "description": "A description for 'path.log.all'"
+  },
+  {
+    "name": "path.log.error",
+    "type": "java.lang.String",
+    "description": "A description for 'path.log.error'"
   }
 ]}

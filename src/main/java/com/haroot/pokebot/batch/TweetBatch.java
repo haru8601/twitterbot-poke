@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.haroot.pokebot.config.ResourcePathConfig;
 import com.haroot.pokebot.dto.PokedexDto;
 import com.haroot.pokebot.twitterapi.auth.AuthVia20AuthCode;
+import com.haroot.pokebot.twitterapi.auth.TokenUtils;
 import com.haroot.pokebot.twitterapi.utils.Tweets;
 import com.haroot.pokebot.utils.MapperUtils;
 import com.haroot.pokebot.utils.PokeUtils;
@@ -36,7 +37,7 @@ public class TweetBatch {
 		log.info("initialized apiInstance");
 
 		// get poke list
-		List<PokedexDto> pokeAllNode = MapperUtils.readJson(resourcePathConfig.getPokedex(),
+		List<PokedexDto> pokeAllNode = MapperUtils.readJsonAsList(resourcePathConfig.getPokedex(),
 				new TypeReference<List<PokedexDto>>() {
 				});
 
@@ -65,17 +66,10 @@ public class TweetBatch {
 			return;
 		}
 
-		// エラー処理
-		// token更新して再度実行
-		log.info("start refresh token.");
-		try {
-			apiInstance.refreshToken();
-		} catch (Exception ex) {
-			log.error("cannot refresh token...");
-			log.error(ex.getMessage(), ex);
+		// トークン更新
+		if (!TokenUtils.refreshToken(apiInstance)) {
 			return;
 		}
-		log.info("refreshed access token.");
 
 		// 再実行
 		log.info("restart tweet.");

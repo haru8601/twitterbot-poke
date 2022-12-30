@@ -112,6 +112,7 @@ public class Tweets {
 	 * @return 検索結果
 	 */
 	public static Get2TweetsSearchRecentResponse searchTweet(TwitterApi apiInstance, String query) {
+		log.info("start searching tweet");
 		Get2TweetsSearchRecentResponse response = null;
 		try {
 			// リクエスト数は10-100
@@ -130,7 +131,7 @@ public class Tweets {
 			log.error("Response headers: " + ex.getResponseHeaders());
 			log.error(ex.getMessage(), ex);
 		}
-
+		log.info("end searching tweet");
 		return response;
 	}
 

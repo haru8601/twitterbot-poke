@@ -51,6 +51,7 @@ public class OAuth20GetAccessToken {
 	private final UserInfoConfig userInfoConfig;
 
 	public void getToken() {
+		log.info("start getting token.");
 		// read token file
 		TokenDto tokenDto = MapperUtils.readJson(resourcePathConfig.getToken(), TokenDto.class);
 		if (tokenDto == null) {
@@ -68,6 +69,7 @@ public class OAuth20GetAccessToken {
 		// Setting the access & refresh tokens into TwitterCredentialsOAuth2
 		credentials.setTwitterOauth2AccessToken(accessToken.getAccessToken());
 		credentials.setTwitterOauth2RefreshToken(accessToken.getRefreshToken());
+		log.info("end getting token.");
 	}
 
 	public OAuth2AccessToken getAccessToken(TwitterCredentialsOAuth2 credentials) {
