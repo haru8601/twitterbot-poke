@@ -35,6 +35,7 @@ import com.twitter.clientlib.TwitterCredentialsOAuth2;
 import com.twitter.clientlib.auth.TwitterOAuth20Service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 新規AccessToken取得(Javaプログラム)
@@ -44,6 +45,7 @@ import lombok.RequiredArgsConstructor;
  */
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class OAuth20GetAccessToken {
 	private final ResourcePathConfig resourcePathConfig;
 	private final UserInfoConfig userInfoConfig;
@@ -59,7 +61,7 @@ public class OAuth20GetAccessToken {
 
 		OAuth2AccessToken accessToken = getAccessToken(credentials);
 		if (accessToken == null) {
-			System.out.println("token is null");
+			log.info("token is null");
 			return;
 		}
 
@@ -75,7 +77,7 @@ public class OAuth20GetAccessToken {
 
 		OAuth2AccessToken accessToken = null;
 		try (final Scanner in = new Scanner(System.in, "UTF-8");) {
-			System.out.println("Fetching the Authorization URL...");
+			log.info("Fetching the Authorization URL...");
 
 			final String secretState = "state";
 			PKCE pkce = new PKCE();
@@ -84,19 +86,19 @@ public class OAuth20GetAccessToken {
 			pkce.setCodeVerifier("challenge");
 			String authorizationUrl = service.getAuthorizationUrl(pkce, secretState);
 
-			System.out.println("Go to the Authorization URL and authorize your App:\n" + authorizationUrl
+			log.info("Go to the Authorization URL and authorize your App:\n" + authorizationUrl
 					+ "\nAfter that paste the authorization code here\n>>");
 			final String code = in.nextLine();
-			System.out.println("\nTrading the Authorization Code for an Access Token...");
+			log.info("\nTrading the Authorization Code for an Access Token...");
 			accessToken = service.getAccessToken(pkce, code);
 
-			System.out.println("Access token: " + accessToken.getAccessToken());
-			System.out.println("Refresh token: " + accessToken.getRefreshToken());
+			log.info("Access token: " + accessToken.getAccessToken());
+			log.info("Refresh token: " + accessToken.getRefreshToken());
 		} catch (
 
-		Exception e) {
-			System.err.println("Error while getting the access token:\n " + e);
-			e.printStackTrace();
+		Exception ex) {
+			log.error("Error while getting the access token:\n " + ex);
+			log.error(ex.getMessage(), ex);
 		}
 		return accessToken;
 	}

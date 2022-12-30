@@ -19,9 +19,11 @@ import com.twitter.clientlib.api.TwitterApi;
 import com.twitter.clientlib.model.FilteredStreamingTweetResponse;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class ReplyBatch {
 	private final AuthVia20AppOnly authVia20AppOnly;
 	private final ReplyExecutor replyExecutor;
@@ -32,15 +34,15 @@ public class ReplyBatch {
 	// returnしたら1m後に再実行
 	@Scheduled(fixedDelay = 1, timeUnit = TimeUnit.MINUTES)
 	public void reply() {
-		System.out.println("start replyBatch");
+		log.info("start replyBatch");
 
 		// initialize instance
-		System.out.println("started check beader token.");
+		log.info("started check beader token.");
 		TwitterApi apiInstance = authVia20AppOnly.init();
-		System.out.println("finished check beader token.");
+		log.info("finished check beader token.");
 
 		// listen
-		System.out.println("start listening.");
+		log.info("start listening.");
 		long start = new Date().getTime();
 		try {
 			InputStream stream = apiInstance.tweets().searchStream().execute();
@@ -56,7 +58,7 @@ public class ReplyBatch {
 						line = br.readLine();
 						continue;
 					}
-					System.out.println("found tweet.");
+					log.info("found tweet.");
 					// 取得結果をキャスト
 					FilteredStreamingTweetResponse res = (FilteredStreamingTweetResponse) JSON.getGson().fromJson(line,
 							localVarReturnType);
@@ -65,12 +67,12 @@ public class ReplyBatch {
 					line = br.readLine();
 				}
 			} catch (Exception ex) {
-				ex.printStackTrace();
+				log.error(ex.getMessage(), ex);
 			}
 		} catch (ApiException ex) {
-			ex.printStackTrace();
+			log.error(ex.getMessage(), ex);
 		}
-		System.out.println("end listening.");
-		System.out.println("end replyBatch");
+		log.info("end listening.");
+		log.info("end replyBatch");
 	}
 }

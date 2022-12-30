@@ -7,6 +7,9 @@ import java.util.List;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class MapperUtils {
 	public static <T> T readJson(String jsonPath, Class<T> type) {
 		// 引数の型のインスタンス生成
@@ -14,7 +17,7 @@ public class MapperUtils {
 		try {
 			instance = new ObjectMapper().readValue(Paths.get(jsonPath).toFile(), type);
 		} catch (IOException ex) {
-			ex.printStackTrace();
+			log.error(ex.getMessage(), ex);
 			return null;
 		}
 		return instance;
@@ -26,7 +29,7 @@ public class MapperUtils {
 		try {
 			instanceList = new ObjectMapper().readValue(Paths.get(jsonPath).toFile(), typeReference);
 		} catch (IOException ex) {
-			ex.printStackTrace();
+			log.error(ex.getMessage(), ex);
 			return null;
 		}
 		return instanceList;
@@ -37,7 +40,7 @@ public class MapperUtils {
 		try {
 			new ObjectMapper().writeValue(Paths.get(dest).toFile(), obj);
 		} catch (IOException ex) {
-			ex.printStackTrace();
+			log.error(ex.getMessage(), ex);
 			writeFlg = false;
 		}
 		return writeFlg;

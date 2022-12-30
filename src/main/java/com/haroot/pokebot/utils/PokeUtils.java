@@ -8,12 +8,15 @@ import java.util.Random;
 import com.haroot.pokebot.dto.PokedexDto;
 import com.haroot.pokebot.dto.PokedexDto.Base;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * ポケモン周りのutilクラス
  * 
  * @author sekiharuhito
  *
  */
+@Slf4j
 public class PokeUtils {
 	/**
 	 * 本日のポケモン取得
@@ -34,7 +37,7 @@ public class PokeUtils {
 
 		// 今日のポケモン
 		PokedexDto todayPoke = pokeAllNode.get(new Random().nextInt(pokeSumCount));
-		System.out.println("today's pokemon: " + todayPoke.getName().getJapanese());
+		log.info("today's pokemon: " + todayPoke.getName().getJapanese());
 		return todayPoke;
 	}
 
@@ -76,7 +79,7 @@ public class PokeUtils {
 			nameList.remove(randomNum);
 		}
 		String swappedName = newName.toString();
-		System.out.println("new name: " + swappedName);
+		log.info("new name: " + swappedName);
 		return swappedName;
 	}
 
@@ -120,7 +123,7 @@ public class PokeUtils {
 		for (PokedexDto pokemon : pokeAllNode) {
 			String pokeName = pokemon.getName().getJapanese();
 			if (formatReceivedTweet.contains(pokeName)) {
-				System.out.println(pokeName);
+				log.info(pokeName);
 				// 「ゾロア」と「ゾロアーク」両方一致する場合、名前が長い方(ゾロアーク)を採用
 				if (pokeName.length() > nameLen) {
 					targetPoke = pokemon;

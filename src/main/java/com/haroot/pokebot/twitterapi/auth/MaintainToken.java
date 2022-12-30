@@ -9,6 +9,7 @@ import com.haroot.pokebot.utils.MapperUtils;
 import com.twitter.clientlib.ApiClientCallback;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * トークン更新実装クラス
@@ -18,6 +19,7 @@ import lombok.RequiredArgsConstructor;
  */
 @Component
 @RequiredArgsConstructor
+@Slf4j
 class MaintainToken implements ApiClientCallback {
 	private final ResourcePathConfig resourcePathConfig;
 
@@ -26,7 +28,7 @@ class MaintainToken implements ApiClientCallback {
 	 */
 	@Override
 	public void onAfterRefreshToken(OAuth2AccessToken accessToken) {
-		System.out.println("try refreshing token.");
+		log.info("try refreshing token.");
 		// set new token to root
 		TokenDto tokenDto = new TokenDto();
 		tokenDto.setAccessToken(accessToken.getAccessToken());
@@ -35,10 +37,10 @@ class MaintainToken implements ApiClientCallback {
 		// update json file
 		boolean writeFlg = MapperUtils.writeJson(resourcePathConfig.getToken(), tokenDto);
 		if (!writeFlg) {
-			System.err.println("cannot refresh token...");
+			log.error("cannot refresh token...");
 			return;
 		}
-		System.out.println("refreshed token!");
+		log.info("refreshed token!");
 		return;
 	}
 }

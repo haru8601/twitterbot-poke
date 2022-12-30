@@ -15,23 +15,25 @@ import com.haroot.pokebot.utils.PokeUtils;
 import com.twitter.clientlib.api.TwitterApi;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class TweetBatch {
 	private final AuthVia20AuthCode authVia20AuthCode;
 	private final ResourcePathConfig resourcePathConfig;
 
 	@Scheduled(cron = "${batch.cron.tweet}")
 	public void tweet() {
-		System.out.println("start tweetBatch");
+		log.info("start tweetBatch");
 
 		// initialize instance.
 		TwitterApi apiInstance = authVia20AuthCode.init();
 		if (apiInstance == null) {
 			return;
 		}
-		System.out.println("initialized apiInstance");
+		log.info("initialized apiInstance");
 
 		// get poke list
 		List<PokedexDto> pokeAllNode = MapperUtils.readJson(resourcePathConfig.getPokedex(),
@@ -53,36 +55,36 @@ public class TweetBatch {
 		}
 
 		// ツイート処理
-		System.out.println("start tweet.");
+		log.info("start tweet.");
 
 		boolean authFlg = Tweets.tweet(apiInstance, tweetStr);
 		// 成功したら終了
 		if (authFlg) {
-			System.out.println("end tweet.");
-			System.out.println("used access token.");
+			log.info("end tweet.");
+			log.info("used access token.");
 			return;
 		}
 
 		// エラー処理
 		// token更新して再度実行
-		System.out.println("start refresh token.");
+		log.info("start refresh token.");
 		try {
 			apiInstance.refreshToken();
-		} catch (Exception e) {
-			System.err.println("cannot refresh token...");
-			e.printStackTrace();
+		} catch (Exception ex) {
+			log.error("cannot refresh token...");
+			log.error(ex.getMessage(), ex);
 			return;
 		}
-		System.out.println("refreshed access token.");
+		log.info("refreshed access token.");
 
 		// 再実行
-		System.out.println("restart tweet.");
+		log.info("restart tweet.");
 		authFlg = Tweets.tweet(apiInstance, swappedName);
 		if (authFlg) {
-			System.out.println("end tweet.");
+			log.info("end tweet.");
 		} else {
-			System.err.println("cannot tweet...");
+			log.error("cannot tweet...");
 		}
-		System.out.println("end tweetBatch");
+		log.info("end tweetBatch");
 	}
 }

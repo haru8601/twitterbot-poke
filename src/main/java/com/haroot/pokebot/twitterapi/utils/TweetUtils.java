@@ -6,12 +6,15 @@ import java.util.List;
 import com.twitter.clientlib.model.Tweet;
 import com.twitter.clientlib.model.TweetPublicMetrics;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * TwitterAPI使用下でのutilクラス
  * 
  * @author sekiharuhito
  *
  */
+@Slf4j
 public class TweetUtils {
 	/**
 	 * リツイート数やいいね数が1以上のものIDを抽出
@@ -28,7 +31,7 @@ public class TweetUtils {
 				idList.add(tweet.getId());
 			}
 		}
-		System.out.println("selected popular tweets.");
+		log.info("selected popular tweets.");
 		return idList;
 	}
 }

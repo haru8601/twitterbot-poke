@@ -12,8 +12,8 @@ build/
 !**/src/test/**/build/
 .history
 application*.yaml
-userInfo.json
 token.json
+test.log
 
 ### STS ###
 .apt_generated

@@ -13,24 +13,26 @@ import com.twitter.clientlib.api.TwitterApi;
 import com.twitter.clientlib.model.Get2TweetsSearchRecentResponse;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class LikeBatch {
 	private final AuthVia20AuthCode authVia20AuthCode;
 	private final UserInfoConfig userInfoConfig;
 
 	@Scheduled(cron = "${batch.cron.like}")
 	public void like() {
-		System.out.println("start likeBatch");
+		log.info("start likeBatch");
 
 		// initialize instance.
 		TwitterApi apiInstance = authVia20AuthCode.init();
 		if (apiInstance == null) {
-			System.err.println("token is null");
+			log.error("token is null.");
 			return;
 		}
-		System.out.println("initialized apiInstance");
+		log.info("initialized apiInstance");
 
 		// search tweet(I'd like to "like")
 		// 基本は#ポケモンで検索、あとは変なのを除外
@@ -39,7 +41,7 @@ public class LikeBatch {
 				+ "-is:retweet -is:reply -has:links -has:mentions";
 		Get2TweetsSearchRecentResponse searchRes = Tweets.searchTweet(apiInstance, query);
 		if (searchRes == null) {
-			System.err.println("there is no tweet...");
+			log.error("there is no tweet...");
 			return;
 		}
 
@@ -48,7 +50,7 @@ public class LikeBatch {
 
 		// like to the tweet(max 50 per 15 minutes)
 		int loopLen = Math.min(idList.size(), 30);
-		System.out.println("like the following ids.");
+		log.info("like the following ids.");
 
 		// なぜか自分のIDを送る必要がある
 		String myId = userInfoConfig.getMyId();
@@ -56,12 +58,12 @@ public class LikeBatch {
 		for (int i = 0; i < loopLen; i++) {
 			String tweetId = idList.get(i);
 			boolean passed = Tweets.likeTweet(apiInstance, tweetId, myId);
-			System.out.print(tweetId + ",");
+			log.info(tweetId + ",");
 			if (!passed) {
-				System.err.println("interrupt to 'like'");
+				log.error("interrupt to 'like'");
 				break;
 			}
 		}
-		System.out.println("\nend likeBatch");
+		log.info("\nend likeBatch");
 	}
 }

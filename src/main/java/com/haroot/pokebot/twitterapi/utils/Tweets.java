@@ -13,6 +13,9 @@ import com.twitter.clientlib.model.TweetCreateRequestReply;
 import com.twitter.clientlib.model.TweetCreateResponse;
 import com.twitter.clientlib.model.UsersLikesCreateRequest;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class Tweets {
 
 	/**
@@ -28,27 +31,27 @@ public class Tweets {
 		try {
 			TweetCreateResponse result = apiInstance.tweets().createTweet(tweetCreateRequest).execute();
 			if (result.getErrors() != null && result.getErrors().size() > 0) {
-				System.out.println("Error:");
+				log.info("Error:");
 				result.getErrors().forEach(e -> {
-					System.out.println(e.toString());
+					log.info(e.toString());
 					if (e instanceof ResourceUnauthorizedProblem) {
-						System.out.println(((ResourceUnauthorizedProblem) e).getTitle() + " "
+						log.info(((ResourceUnauthorizedProblem) e).getTitle() + " "
 								+ ((ResourceUnauthorizedProblem) e).getDetail());
 					}
 				});
 
 				// 正常系
 			} else {
-				System.out.println("createTweet - Tweet Text: " + result.toString());
+				log.info("createTweet - Tweet Text: " + result.toString());
 				return true;
 			}
-		} catch (ApiException e) {
-			System.err.println("Status code: " + e.getCode());
-			System.err.println("Reason: " + e.getResponseBody());
-			System.err.println("Response headers: " + e.getResponseHeaders());
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (ApiException ex) {
+			log.error("Status code: " + ex.getCode());
+			log.error("Reason: " + ex.getResponseBody());
+			log.error("Response headers: " + ex.getResponseHeaders());
+			log.error(ex.getMessage(), ex);
+		} catch (Exception ex) {
+			log.error(ex.getMessage(), ex);
 		}
 
 		return false;
@@ -77,26 +80,26 @@ public class Tweets {
 
 			// if there are errors
 			if (result.getErrors() != null && result.getErrors().size() > 0) {
-				System.out.println("Error:");
+				log.info("Error:");
 				result.getErrors().forEach(e -> {
-					System.out.println(e.toString());
+					log.info(e.toString());
 					if (e instanceof ResourceUnauthorizedProblem) {
-						System.out.println(((ResourceUnauthorizedProblem) e).getTitle() + " "
+						log.info(((ResourceUnauthorizedProblem) e).getTitle() + " "
 								+ ((ResourceUnauthorizedProblem) e).getDetail());
 					}
 				});
 				// 正常系
 			} else {
-				System.out.println("createTweet - Tweet Text: " + result.toString());
+				log.info("createTweet - Tweet Text: " + result.toString());
 				return true;
 			}
-		} catch (ApiException e) {
-			System.err.println("Status code: " + e.getCode());
-			System.err.println("Reason: " + e.getResponseBody());
-			System.err.println("Response headers: " + e.getResponseHeaders());
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (ApiException ex) {
+			log.error("Status code: " + ex.getCode());
+			log.error("Reason: " + ex.getResponseBody());
+			log.error("Response headers: " + ex.getResponseHeaders());
+			log.error(ex.getMessage(), ex);
+		} catch (Exception ex) {
+			log.error(ex.getMessage(), ex);
 		}
 		return false;
 	}
@@ -120,12 +123,12 @@ public class Tweets {
 			// request
 			response = apiInstance.tweets().tweetsRecentSearch(query).maxResults(maxResults).tweetFields(tweetFields)
 					.execute();
-		} catch (ApiException e) {
-			System.err.println("cannot get recent tweets...");
-			System.err.println("Status code: " + e.getCode());
-			System.err.println("Reason: " + e.getResponseBody());
-			System.err.println("Response headers: " + e.getResponseHeaders());
-			e.printStackTrace();
+		} catch (ApiException ex) {
+			log.error("cannot get recent tweets...");
+			log.error("Status code: " + ex.getCode());
+			log.error("Reason: " + ex.getResponseBody());
+			log.error("Response headers: " + ex.getResponseHeaders());
+			log.error(ex.getMessage(), ex);
 		}
 
 		return response;
@@ -148,13 +151,13 @@ public class Tweets {
 
 			// request
 			apiInstance.tweets().usersIdLike(myId).usersLikesCreateRequest(request).execute();
-		} catch (ApiException e) {
-			System.err.println("cannot like tweet...");
-			System.err.println("tweet id:" + tweetId);
-			System.err.println("Status code: " + e.getCode());
-			System.err.println("Reason: " + e.getResponseBody());
-			System.err.println("Response headers: " + e.getResponseHeaders());
-			e.printStackTrace();
+		} catch (ApiException ex) {
+			log.error("cannot like tweet...");
+			log.error("tweet id:" + tweetId);
+			log.error("Status code: " + ex.getCode());
+			log.error("Reason: " + ex.getResponseBody());
+			log.error("Response headers: " + ex.getResponseHeaders());
+			log.error(ex.getMessage(), ex);
 			passed = false;
 		}
 		return passed;
