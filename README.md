@@ -32,7 +32,9 @@
 │       ├── token # /token.json
 │       └── pokedex # /pokedex.json
 ├── path
-│   └── log # /hoge/log/app.log
+│   └── log
+│       ├── all # /hoge/log/app.log
+│       └── error # /hoge/log/app-error.log
 └── user-info
     ├── my-id # 1234567890123456789
     ├── client-id # XXXXXZZZZZaaaaa00000xxxxxYYYYXXXXX
