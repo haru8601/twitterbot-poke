@@ -91,6 +91,10 @@ public class PokeUtils {
 
 		Base base = targetPoke.getBase();
 		int no = targetPoke.getId();
+		String noStr = String.valueOf(no);
+		if (no >= 906) {
+			noStr = "???";
+		}
 		int h = base.getH();
 		int a = base.getA();
 		int b = base.getB();
@@ -98,8 +102,8 @@ public class PokeUtils {
 		int d = base.getD();
 		int s = base.getS();
 		int sum = h + a + b + c + d + s;
-		String res = BR + BR + "【No." + no + "】" + BR + "HP: " + h + BR + "攻撃: " + a + BR + "防御: " + b + BR + "特攻: " + c
-				+ BR + "特防: " + d + BR + "素早: " + s + BR + "合計: " + sum;
+		String res = BR + BR + "【No." + noStr + "】" + BR + "HP: " + h + BR + "攻撃: " + a + BR + "防御: " + b + BR + "特攻: "
+				+ c + BR + "特防: " + d + BR + "素早: " + s + BR + "合計: " + sum;
 		return res;
 	}
 
