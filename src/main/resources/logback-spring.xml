@@ -1,29 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE logback>
 <configuration>
+	<!-- logbackの解析状況を表示しない -->
+	<statusListener class="ch.qos.logback.core.status.NopStatusListener" />
 	<include
-		resource="org/springframework/boot/logging/logback/defaults.xml"></include>
-	<include
-		resource="org/springframework/boot/logging/logback/console-appender.xml"></include>
-	<timestamp key="LOG_DATE" datePattern="yyyyMMdd"></timestamp>
-	<springProperty name="LOG_FILE" source="path.log.all" />
-	<springProperty name="LOG_FILE_ERROR"
-		source="path.log.error" />
-	<property name="MSG_PATTERN"
-		value="%d{yyyy/MM/dd HH:mm:ss.SSS} [%t] %-5le %lo{36} - %msg %n"></property>
+		resource="org/springframework/boot/logging/logback/defaults.xml" />
+	<timestamp key="LOG_DATE" datePattern="yyyyMMdd" />
 
+	<!-- 環境ごとに出力設定 -->
 	<springProfile name="local">
+		<include
+			resource="org/springframework/boot/logging/logback/console-appender.xml" />
 		<root level="INFO">
-			<appender-ref ref="CONSOLE"></appender-ref>
+			<appender-ref ref="CONSOLE" />
 		</root>
 	</springProfile>
-	<!-- 環境ごとに出力設定 -->
-	<springProfile name="local,production">
+
+	<springProfile name="production">
+		<springProperty name="LOG_FILE" source="path.log.all" />
+		<springProperty name="LOG_FILE_ERROR"
+			source="path.log.error" />
 		<!-- appenderが"FILE"の場合の設定 -->
 		<appender name="FILE_INFO"
 			class="ch.qos.logback.core.rolling.RollingFileAppender">
 			<encoder>
-				<pattern>${MSG_PATTERN}</pattern>
+				<!-- defaults.xmlに記載あり -->
+				<pattern>${FILE_LOG_PATTERN}</pattern>
 			</encoder>
 			<!-- 出力先ファイルは"LOG_FILE"のパス -->
 			<file>${LOG_FILE}</file>
@@ -36,7 +38,7 @@
 		<appender name="FILE_ERROR"
 			class="ch.qos.logback.core.rolling.RollingFileAppender">
 			<encoder>
-				<pattern>${MSG_PATTERN}</pattern>
+				<pattern>${FILE_LOG_PATTERN}</pattern>
 			</encoder>
 			<filter class="ch.qos.logback.classic.filter.LevelFilter">
 				<level>ERROR</level>
@@ -52,8 +54,8 @@
 			</rollingPolicy>
 		</appender>
 		<root level="INFO">
-			<appender-ref ref="FILE_INFO"></appender-ref>
-			<appender-ref ref="FILE_ERROR"></appender-ref>
+			<appender-ref ref="FILE_INFO" />
+			<appender-ref ref="FILE_ERROR" />
 		</root>
 	</springProfile>
 

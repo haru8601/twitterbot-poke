@@ -64,12 +64,12 @@ public class LikeBatch {
 		for (int i = 0; i < loopLen; i++) {
 			String tweetId = idList.get(i);
 			boolean passed = Tweets.likeTweet(apiInstance, tweetId, myId);
-			log.info(tweetId + ",");
+			log.info(tweetId);
 			if (!passed) {
 				log.error("interrupt to 'like'");
 				break;
 			}
 		}
-		log.info("\nend likeBatch");
+		log.info("end likeBatch");
 	}
 }

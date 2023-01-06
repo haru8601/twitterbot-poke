@@ -46,11 +46,7 @@ public class Tweets {
 				return true;
 			}
 		} catch (ApiException ex) {
-			log.error("Status code: " + ex.getCode());
-			log.error("Reason: " + ex.getResponseBody());
-			log.error("Response headers: " + ex.getResponseHeaders());
-			log.error(ex.getMessage(), ex);
-		} catch (Exception ex) {
+			log.error("cannot tweet...");
 			log.error(ex.getMessage(), ex);
 		}
 
@@ -94,11 +90,7 @@ public class Tweets {
 				return true;
 			}
 		} catch (ApiException ex) {
-			log.error("Status code: " + ex.getCode());
-			log.error("Reason: " + ex.getResponseBody());
-			log.error("Response headers: " + ex.getResponseHeaders());
-			log.error(ex.getMessage(), ex);
-		} catch (Exception ex) {
+			log.error("cannot tweet as reply...");
 			log.error(ex.getMessage(), ex);
 		}
 		return false;
@@ -126,9 +118,6 @@ public class Tweets {
 					.execute();
 		} catch (ApiException ex) {
 			log.error("cannot get recent tweets...");
-			log.error("Status code: " + ex.getCode());
-			log.error("Reason: " + ex.getResponseBody());
-			log.error("Response headers: " + ex.getResponseHeaders());
 			log.error(ex.getMessage(), ex);
 		}
 		log.info("end searching tweet");
@@ -155,9 +144,6 @@ public class Tweets {
 		} catch (ApiException ex) {
 			log.error("cannot like tweet...");
 			log.error("tweet id:" + tweetId);
-			log.error("Status code: " + ex.getCode());
-			log.error("Reason: " + ex.getResponseBody());
-			log.error("Response headers: " + ex.getResponseHeaders());
 			log.error(ex.getMessage(), ex);
 			passed = false;
 		}

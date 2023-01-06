@@ -1,10 +1,10 @@
 package com.haroot.pokebot.batch;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.scheduling.annotation.Scheduled;
@@ -27,12 +27,9 @@ import lombok.extern.slf4j.Slf4j;
 public class ReplyBatch {
 	private final AuthVia20AppOnly authVia20AppOnly;
 	private final ReplyExecutor replyExecutor;
-	public static final long MINUTE_MILLS = 1000 * 60;
-	// 23h59m
-	public static final long EXEC_TIME = MINUTE_MILLS * 60 * 24 - MINUTE_MILLS;
 
-	// returnしたら1m後に再実行
-	@Scheduled(fixedDelay = 1, timeUnit = TimeUnit.MINUTES)
+	// もしreturnしたら15m後に再実行(429エラー回避用)
+	@Scheduled(fixedDelay = 15, timeUnit = TimeUnit.MINUTES)
 	public void reply() {
 		log.info("start replyBatch");
 
@@ -43,9 +40,7 @@ public class ReplyBatch {
 
 		// listen
 		log.info("start listening.");
-		long start = new Date().getTime();
-		try {
-			InputStream stream = apiInstance.tweets().searchStream().execute();
+		try (InputStream stream = apiInstance.tweets().searchStream().execute()) {
 			try (BufferedReader br = new BufferedReader(new InputStreamReader(stream))) {
 				Type localVarReturnType = new TypeToken<FilteredStreamingTweetResponse>() {
 					private static final long serialVersionUID = 1L;
@@ -53,7 +48,7 @@ public class ReplyBatch {
 				String line = br.readLine();
 
 				// 無限ループ
-				while (line != null && new Date().getTime() - start < EXEC_TIME) {
+				while (line != null) {
 					if (line.isEmpty()) {
 						line = br.readLine();
 						continue;
@@ -67,9 +62,11 @@ public class ReplyBatch {
 					line = br.readLine();
 				}
 			} catch (Exception ex) {
+				log.error("error occured in BufferedReader");
 				log.error(ex.getMessage(), ex);
 			}
-		} catch (ApiException ex) {
+		} catch (ApiException | IOException ex) {
+			log.error("error occured in searchStrem");
 			log.error(ex.getMessage(), ex);
 		}
 		log.info("end listening.");
