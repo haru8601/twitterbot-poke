@@ -28,8 +28,8 @@ public class ReplyBatch {
 	private final AuthVia20AppOnly authVia20AppOnly;
 	private final ReplyExecutor replyExecutor;
 
-	// もしreturnしたら15m後に再実行(429エラー回避用)
-	@Scheduled(fixedDelay = 15, timeUnit = TimeUnit.MINUTES)
+	// もしreturnしたら1m後に再実行
+	@Scheduled(fixedDelay = 1, timeUnit = TimeUnit.MINUTES)
 	public void reply() {
 		log.info("start replyBatch");
 
@@ -40,7 +40,8 @@ public class ReplyBatch {
 
 		// listen
 		log.info("start listening.");
-		try (InputStream stream = apiInstance.tweets().searchStream().execute()) {
+		// 10回まではリトライ
+		try (InputStream stream = apiInstance.tweets().searchStream().execute(10)) {
 			try (BufferedReader br = new BufferedReader(new InputStreamReader(stream))) {
 				Type localVarReturnType = new TypeToken<FilteredStreamingTweetResponse>() {
 					private static final long serialVersionUID = 1L;
@@ -50,6 +51,7 @@ public class ReplyBatch {
 				// 無限ループ
 				while (line != null) {
 					if (line.isEmpty()) {
+						// 入力待ち
 						line = br.readLine();
 						continue;
 					}
