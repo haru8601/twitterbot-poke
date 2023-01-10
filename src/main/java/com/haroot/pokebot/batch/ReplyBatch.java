@@ -28,8 +28,8 @@ public class ReplyBatch {
 	private final AuthVia20AppOnly authVia20AppOnly;
 	private final ReplyExecutor replyExecutor;
 
-	// もしreturnしたら1m後に再実行
-	@Scheduled(fixedDelay = 1, timeUnit = TimeUnit.MINUTES)
+	// もしreturnしたら指定時間後に再実行
+	@Scheduled(fixedDelay = 5, timeUnit = TimeUnit.MINUTES)
 	public void reply() {
 		log.info("start replyBatch");
 
@@ -63,9 +63,10 @@ public class ReplyBatch {
 					replyExecutor.exec(res.getData());
 					line = br.readLine();
 				}
-			} catch (Exception ex) {
+			} catch (IOException ex) {
 				log.error("error occured in BufferedReader");
 				log.error(ex.getMessage(), ex);
+				stream.close();
 			}
 		} catch (ApiException | IOException ex) {
 			log.error("error occured in searchStrem");
