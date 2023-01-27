@@ -92,9 +92,6 @@ public class PokeUtils {
 		Base base = targetPoke.getBase();
 		int no = targetPoke.getId();
 		String noStr = String.valueOf(no);
-		if (no >= 906) {
-			noStr = "???";
-		}
 		int h = base.getH();
 		int a = base.getA();
 		int b = base.getB();
