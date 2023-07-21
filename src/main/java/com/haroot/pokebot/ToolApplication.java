@@ -9,15 +9,15 @@ import com.haroot.pokebot.tools.PokedexChecker;
 /**
  * PokeBotのライフサイクル外のツール実行クラス
  *
- * @author sekiharuhito
+ * @author haroot
  *
  */
 @SpringBootApplication
 public class ToolApplication {
-	public static void main(String[] args) {
-		ConfigurableApplicationContext cac = SpringApplication.run(ToolApplication.class, args);
-		// getBean内のクラスは適宜実行したいクラスに置き換えて使用
-		cac.getBean(PokedexChecker.class).check();
-		return;
-	}
+  public static void main(String[] args) {
+    ConfigurableApplicationContext cac = SpringApplication.run(ToolApplication.class, args);
+    // getBean内のクラスは適宜実行したいクラスに置き換えて使用
+    cac.getBean(PokedexChecker.class).check();
+    return;
+  }
 }

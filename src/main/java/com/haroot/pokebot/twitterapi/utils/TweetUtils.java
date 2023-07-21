@@ -10,15 +10,15 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * TwitterAPI使用下でのutilクラス
- * 
- * @author sekiharuhito
+ *
+ * @author haroot
  *
  */
 @Slf4j
 public class TweetUtils {
 	/**
 	 * リツイート数やいいね数が1以上のものIDを抽出
-	 * 
+	 *
 	 * @param tweetList 検索対象のツイートリスト
 	 * @return 抽出後のツイートIDリスト
 	 */

@@ -13,8 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * トークン更新実装クラス
- * 
- * @author sekiharuhito
+ *
+ * @author haroot
  *
  */
 @Component

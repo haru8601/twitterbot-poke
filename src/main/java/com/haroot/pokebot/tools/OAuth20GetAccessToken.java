@@ -39,8 +39,8 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * 新規AccessToken取得(Javaプログラム)
- * 
- * @author sekiharuhito
+ *
+ * @author haroot
  *
  */
 @Component

@@ -12,15 +12,15 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * ポケモン周りのutilクラス
- * 
- * @author sekiharuhito
+ *
+ * @author haroot
  *
  */
 @Slf4j
 public class PokeUtils {
 	/**
 	 * 本日のポケモン取得
-	 * 
+	 *
 	 * @param pokeAllNode ポケモン一覧
 	 * @return 今日のポケモン
 	 */
@@ -38,7 +38,7 @@ public class PokeUtils {
 
 	/**
 	 * 文字列のアナグラム生成関数
-	 * 
+	 *
 	 * @param oldStr 元の文字列
 	 * @return アナグラム
 	 */
@@ -82,7 +82,7 @@ public class PokeUtils {
 
 	/**
 	 * ポケモンの詳細テキスト取得
-	 * 
+	 *
 	 * @param targetPoke 対象ポケモン
 	 * @return 詳細テキスト
 	 */
@@ -106,7 +106,7 @@ public class PokeUtils {
 
 	/**
 	 * 文章内からポケモンが含まれてるか検索する
-	 * 
+	 *
 	 * @param pokeAllNode  ポケモン一覧
 	 * @param receivedText 受け取ったテキスト
 	 * @return 対象ポケモン(いない場合はnull)

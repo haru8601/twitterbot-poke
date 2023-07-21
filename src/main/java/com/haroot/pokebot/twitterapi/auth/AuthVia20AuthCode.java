@@ -14,8 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * Auth Code with PKCEの認証インスタンス取得用クラス
- * 
- * @author sekiharuhito
+ *
+ * @author haroot
  *
  */
 @Component

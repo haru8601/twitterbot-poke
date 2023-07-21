@@ -18,8 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * リプライ実行クラス
- * 
- * @author sekiharuhito
+ *
+ * @author haroot
  *
  */
 @Component
@@ -31,7 +31,7 @@ public class ReplyExecutor {
 
 	/**
 	 * リプライ処理実行関数
-	 * 
+	 *
 	 * @param receivedTweet リプライ対象ツイート
 	 */
 	public void exec(Tweet receivedTweet) {

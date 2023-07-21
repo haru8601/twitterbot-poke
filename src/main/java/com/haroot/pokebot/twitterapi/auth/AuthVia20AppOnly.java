@@ -11,8 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * Bearerの認証インスタンス取得用クラス
- * 
- * @author sekiharuhito
+ *
+ * @author haroot
  *
  */
 @Component

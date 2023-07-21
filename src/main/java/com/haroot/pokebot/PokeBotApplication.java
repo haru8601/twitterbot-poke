@@ -6,8 +6,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * Springboot起動クラス
- * 
- * @author sekiharuhito
+ *
+ * @author haroot
  *
  */
 @SpringBootApplication
