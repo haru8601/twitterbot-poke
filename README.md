@@ -1,7 +1,7 @@
 # twitterbot-poke
 
 [twitter-api-java-sdk](https://github.com/twitterdev/twitter-api-java-sdk)を用いた自動ツイート、自動いいね、自動リプライ プログラム。<br>
-機能の詳細は[こちら](https://haroot.net/bot)。<br>
+機能の詳細は[こちら](https://haroot.net/poke/bot)。<br>
 <br>
 
 ## 技術要素
