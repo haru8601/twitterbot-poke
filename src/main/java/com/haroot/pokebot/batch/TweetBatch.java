@@ -22,63 +22,63 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class TweetBatch {
-	private final AuthVia20AuthCode authVia20AuthCode;
-	private final ResourcePathConfig resourcePathConfig;
+  private final AuthVia20AuthCode authVia20AuthCode;
+  private final ResourcePathConfig resourcePathConfig;
 
-	@Scheduled(cron = "${batch.cron.tweet}")
-	public void tweet() {
-		log.info("start tweetBatch");
+  @Scheduled(cron = "${batch.cron.tweet}")
+  public void tweet() {
+    log.info("start tweetBatch");
 
-		// initialize instance.
-		TwitterApi apiInstance = authVia20AuthCode.init();
-		if (apiInstance == null) {
-			return;
-		}
-		log.info("initialized apiInstance");
+    // initialize instance.
+    TwitterApi apiInstance = authVia20AuthCode.init();
+    if (apiInstance == null) {
+      return;
+    }
+    log.info("initialized apiInstance");
 
-		// get poke list
-		List<PokedexDto> pokeAllNode = MapperUtils.readJsonAsList(resourcePathConfig.getPokedex(),
-				new TypeReference<List<PokedexDto>>() {
-				});
+    // get poke list
+    List<PokedexDto> pokeAllNode = MapperUtils.readJsonAsList(resourcePathConfig.getPokedex(),
+      new TypeReference<List<PokedexDto>>() {
+      });
 
-		// get today's poke
-		PokedexDto todayPoke = PokeUtils.getTodaysPoke(pokeAllNode);
-		String todayPokeName = todayPoke.getName().getJapanese();
+    // get today's poke
+    PokedexDto todayPoke = PokeUtils.getTodaysPoke(pokeAllNode);
+    String todayPokeName = todayPoke.getName().getJapanese();
 
-		// swap name
-		String swappedName = PokeUtils.swapName(todayPokeName);
+    // swap name
+    String swappedName = PokeUtils.swapName(todayPokeName);
 
-		// make tweet str
-		String tweetStr = swappedName;
-		// 入れ替わってなければクリア
-		if (swappedName.equals(todayPokeName)) {
-			tweetStr += PokeUtils.getPokeInfo(todayPoke);
-		}
+    // make tweet str
+    String tweetStr = swappedName;
+    // 入れ替わってなければクリア
+    if (swappedName.equals(todayPokeName)) {
+      tweetStr += PokeUtils.getPokeInfo(todayPoke);
+    }
 
-		// ツイート処理
-		log.info("start tweet.");
+    // ツイート処理
+    log.info("start tweet.");
 
-		boolean authFlg = Tweets.tweet(apiInstance, tweetStr);
-		// 成功したら終了
-		if (authFlg) {
-			log.info("end tweet.");
-			log.info("used access token.");
-			return;
-		}
+    boolean authFlg = Tweets.tweet(apiInstance, tweetStr);
+    // 成功したら終了
+    if (authFlg) {
+      log.info("end tweet.");
+      log.info("used access token.");
+      return;
+    }
 
-		// トークン更新
-		if (!TokenUtils.refreshToken(apiInstance)) {
-			return;
-		}
+    // トークン更新
+    if (!TokenUtils.refreshToken(apiInstance)) {
+      return;
+    }
 
-		// 再実行
-		log.info("restart tweet.");
-		authFlg = Tweets.tweet(apiInstance, swappedName);
-		if (authFlg) {
-			log.info("end tweet.");
-		} else {
-			log.error("cannot tweet...");
-		}
-		log.info("end tweetBatch");
-	}
+    // 再実行
+    log.info("restart tweet.");
+    authFlg = Tweets.tweet(apiInstance, tweetStr);
+    if (authFlg) {
+      log.info("end tweet.");
+    } else {
+      log.error("cannot tweet...");
+    }
+    log.info("end tweetBatch");
+  }
 }

@@ -5,9 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
-import java.util.concurrent.TimeUnit;
 
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.google.common.reflect.TypeToken;
@@ -25,54 +23,56 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class ReplyBatch {
-	private final AuthVia20AppOnly authVia20AppOnly;
-	private final ReplyExecutor replyExecutor;
+  private final AuthVia20AppOnly authVia20AppOnly;
+  private final ReplyExecutor replyExecutor;
 
-	// もしreturnしたら指定時間後に再実行
-	@Scheduled(fixedDelay = 5, timeUnit = TimeUnit.MINUTES)
-	public void reply() {
-		log.info("start replyBatch");
+  // もしreturnしたら指定時間後に再実行
+//	@Scheduled(fixedDelay = 5, timeUnit = TimeUnit.MINUTES)
+  public void reply() {
+    log.info("start replyBatch");
 
-		// initialize instance
-		log.info("started check beader token.");
-		TwitterApi apiInstance = authVia20AppOnly.init();
-		log.info("finished check beader token.");
+    // initialize instance
+    log.info("started check beader token.");
+    TwitterApi apiInstance = authVia20AppOnly.init();
+    log.info("finished check beader token.");
 
-		// listen
-		log.info("start listening.");
-		// 10回まではリトライ
-		try (InputStream stream = apiInstance.tweets().searchStream().execute(10)) {
-			try (BufferedReader br = new BufferedReader(new InputStreamReader(stream))) {
-				Type localVarReturnType = new TypeToken<FilteredStreamingTweetResponse>() {
-					private static final long serialVersionUID = 1L;
-				}.getType();
-				String line = br.readLine();
+    // listen
+    log.info("start listening.");
+    // 10回まではリトライ
+    try (InputStream stream = apiInstance.tweets().searchStream().execute(10)) {
+      try (BufferedReader br = new BufferedReader(
+        new InputStreamReader(
+          stream))) {
+        Type localVarReturnType = new TypeToken<FilteredStreamingTweetResponse>() {
+          private static final long serialVersionUID = 1L;
+        }.getType();
+        String line = br.readLine();
 
-				// 無限ループ
-				while (line != null) {
-					if (line.isEmpty()) {
-						// 入力待ち
-						line = br.readLine();
-						continue;
-					}
-					log.info("found tweet.");
-					// 取得結果をキャスト
-					FilteredStreamingTweetResponse res = (FilteredStreamingTweetResponse) JSON.getGson().fromJson(line,
-							localVarReturnType);
-					// リプライ処理開始
-					replyExecutor.exec(res.getData());
-					line = br.readLine();
-				}
-			} catch (IOException ex) {
-				log.error("error occured in BufferedReader");
-				log.error(ex.getMessage(), ex);
-				stream.close();
-			}
-		} catch (ApiException | IOException ex) {
-			log.error("error occured in searchStrem");
-			log.error(ex.getMessage(), ex);
-		}
-		log.info("end listening.");
-		log.info("end replyBatch");
-	}
+        // 無限ループ
+        while (line != null) {
+          if (line.isEmpty()) {
+            // 入力待ち
+            line = br.readLine();
+            continue;
+          }
+          log.info("found tweet.");
+          // 取得結果をキャスト
+          FilteredStreamingTweetResponse res = (FilteredStreamingTweetResponse) JSON.getGson().fromJson(line,
+            localVarReturnType);
+          // リプライ処理開始
+          replyExecutor.exec(res.getData());
+          line = br.readLine();
+        }
+      } catch (IOException ex) {
+        log.error("error occured in BufferedReader");
+        log.error(ex.getMessage(), ex);
+        stream.close();
+      }
+    } catch (ApiException | IOException ex) {
+      log.error("error occured in searchStrem");
+      log.error(ex.getMessage(), ex);
+    }
+    log.info("end listening.");
+    log.info("end replyBatch");
+  }
 }

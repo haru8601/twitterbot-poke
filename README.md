@@ -22,9 +22,9 @@
 
 STS(SpringToolSuite)の場合、<br>
 
-1. `Run As`>`Maven build`
+1. `Gradle Tasks`> `build` > `bootJar`
 
-war ファイルが生成される。
+`/build/libs`に jar ファイルが生成される。
 
 ## application.yaml
 
@@ -34,7 +34,6 @@ war ファイルが生成される。
 .
 ├── batch
 │   └── cron
-│       ├── like # 0 0 20 * * *
 │       └── tweet # 0 0 20 * * *
 ├── file-path
 │   └── resources
