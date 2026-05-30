@@ -48,8 +48,8 @@ dependencies {
 	// twitter-api
 	implementation "com.twitter:twitter-api-java-sdk:2.0.3"
 	// lombok
-	compileOnly 'org.projectlombok:lombok:1.18.24'
-	annotationProcessor 'org.projectlombok:lombok:1.18.24'
+	compileOnly 'org.projectlombok:lombok:1.18.34'
+	annotationProcessor 'org.projectlombok:lombok:1.18.34'
 }
 
 tasks.named('test') {

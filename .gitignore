@@ -48,3 +48,8 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### application ###
+.env
+userInfo.json
+token.json
