@@ -35,8 +35,11 @@ public class AuthVia20AuthCode {
 		}
 
 		// initialize credentials
-		TwitterCredentialsOAuth2 credentials = new TwitterCredentialsOAuth2(userInfoConfig.getClientId(),
-				userInfoConfig.getClientSecret(), tokenDto.getAccessToken(), tokenDto.getRefreshToken());
+		TwitterCredentialsOAuth2 credentials = new TwitterCredentialsOAuth2(
+				userInfoConfig.getClientId(),
+				userInfoConfig.getClientSecret(),
+				tokenDto.getAccessToken(),
+				tokenDto.getRefreshToken());
 
 		// create instance
 		TwitterApi apiInstance = new TwitterApi(credentials);

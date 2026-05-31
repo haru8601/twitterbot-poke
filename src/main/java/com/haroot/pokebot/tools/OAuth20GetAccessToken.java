@@ -20,8 +20,6 @@ https://openapi-generator.tech
 Do not edit the class manually.
 */
 
-import java.util.Scanner;
-
 import org.springframework.stereotype.Component;
 
 import com.github.scribejava.core.model.OAuth2AccessToken;
@@ -31,14 +29,13 @@ import com.haroot.pokebot.config.ResourcePathConfig;
 import com.haroot.pokebot.config.UserInfoConfig;
 import com.haroot.pokebot.dto.TokenDto;
 import com.haroot.pokebot.utils.MapperUtils;
-import com.twitter.clientlib.TwitterCredentialsOAuth2;
 import com.twitter.clientlib.auth.TwitterOAuth20Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 新規AccessToken取得(Javaプログラム)
+ * 新規AccessToken取得
  *
  * @author haroot
  *
@@ -50,58 +47,59 @@ public class OAuth20GetAccessToken {
 	private final ResourcePathConfig resourcePathConfig;
 	private final UserInfoConfig userInfoConfig;
 
-	public void getToken() {
-		log.info("start getting token.");
-		// read token file
-		TokenDto tokenDto = MapperUtils.readJson(resourcePathConfig.getToken(), TokenDto.class);
-		if (tokenDto == null) {
-			return;
-		}
-		TwitterCredentialsOAuth2 credentials = new TwitterCredentialsOAuth2(userInfoConfig.getClientId(),
-				userInfoConfig.getClientSecret(), tokenDto.getAccessToken(), tokenDto.getRefreshToken());
-
-		OAuth2AccessToken accessToken = getAccessToken(credentials);
-		if (accessToken == null) {
-			log.info("token is null");
-			return;
-		}
-
-		// Setting the access & refresh tokens into TwitterCredentialsOAuth2
-		credentials.setTwitterOauth2AccessToken(accessToken.getAccessToken());
-		credentials.setTwitterOauth2RefreshToken(accessToken.getRefreshToken());
-		log.info("end getting token.");
+	/**
+	 * 2026/6/1現在、Developer ConsoleのAgentから取得できるため未テスト
+	 */
+	public String getAuthorizationUrl() {
+		PKCE pkce = buildPkce();
+		TwitterOAuth20Service service = buildService();
+		String url = service.getAuthorizationUrl(pkce, "request-by-haroot8601");
+		log.info("Authorization URL: {}", url);
+		return url;
 	}
 
-	public OAuth2AccessToken getAccessToken(TwitterCredentialsOAuth2 credentials) {
-		TwitterOAuth20Service service = new TwitterOAuth20Service(credentials.getTwitterOauth2ClientId(),
-				credentials.getTwitterOAuth2ClientSecret(), userInfoConfig.getRedirectUrl(),
-				userInfoConfig.getAccessScope());
-
-		OAuth2AccessToken accessToken = null;
-		try (final Scanner in = new Scanner(System.in, "UTF-8");) {
-			log.info("Fetching the Authorization URL...");
-
-			final String secretState = "state";
-			PKCE pkce = new PKCE();
-			pkce.setCodeChallenge("challenge");
-			pkce.setCodeChallengeMethod(PKCECodeChallengeMethod.PLAIN);
-			pkce.setCodeVerifier("challenge");
-			String authorizationUrl = service.getAuthorizationUrl(pkce, secretState);
-
-			log.info("Go to the Authorization URL and authorize your App:\n" + authorizationUrl
-					+ "\nAfter that paste the authorization code here\n>>");
-			final String code = in.nextLine();
-			log.info("\nTrading the Authorization Code for an Access Token...");
-			accessToken = service.getAccessToken(pkce, code);
-
-			log.info("Access token: " + accessToken.getAccessToken());
-			log.info("Refresh token: " + accessToken.getRefreshToken());
-		} catch (
-
-		Exception ex) {
-			log.error("Error while getting the access token:\n " + ex);
-			log.error(ex.getMessage(), ex);
+	/**
+	 * 2026/6/1現在、Developer ConsoleのAgentから取得できるため未テスト
+	 */
+	public boolean updateToken(String code) {
+		TwitterOAuth20Service service = buildService();
+		try {
+			OAuth2AccessToken accessToken = service.getAccessToken(buildPkce(), code);
+			TokenDto tokenDto = new TokenDto();
+			tokenDto.setAccessToken(accessToken.getAccessToken());
+			tokenDto.setRefreshToken(accessToken.getRefreshToken());
+			boolean saved = MapperUtils.writeJson(resourcePathConfig.getToken(), tokenDto);
+			if (saved) {
+				log.info("token.json updated successfully.");
+			} else {
+				log.error("Failed to save token.json.");
+			}
+			return saved;
+		} catch (Exception ex) {
+			log.error("Error while getting the access token: {}", ex.getMessage(), ex);
+			return false;
 		}
-		return accessToken;
+	}
+
+	/**
+	 * 2026/6/1現在、Developer ConsoleのAgentから取得できるため未テスト
+	 */
+	private TwitterOAuth20Service buildService() {
+		return new TwitterOAuth20Service(
+				userInfoConfig.getClientId(),
+				userInfoConfig.getClientSecret(),
+				userInfoConfig.getRedirectUrl(),
+				userInfoConfig.getAccessScope());
+	}
+
+	/**
+	 * 2026/6/1現在、Developer ConsoleのAgentから取得できるため未テスト
+	 */
+	private PKCE buildPkce() {
+		PKCE pkce = new PKCE();
+		pkce.setCodeChallenge("challenge");
+		pkce.setCodeChallengeMethod(PKCECodeChallengeMethod.PLAIN);
+		pkce.setCodeVerifier("challenge");
+		return pkce;
 	}
 }

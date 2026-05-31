@@ -38,8 +38,8 @@ public class TweetBatch {
 
     // get poke list
     List<PokedexDto> pokeAllNode = MapperUtils.readJsonAsList(resourcePathConfig.getPokedex(),
-      new TypeReference<List<PokedexDto>>() {
-      });
+        new TypeReference<List<PokedexDto>>() {
+        });
 
     // get today's poke
     PokedexDto todayPoke = PokeUtils.getTodaysPoke(pokeAllNode);
@@ -59,6 +59,7 @@ public class TweetBatch {
     log.info("start tweet.");
 
     boolean authFlg = Tweets.tweet(apiInstance, tweetStr);
+
     // 成功したら終了
     if (authFlg) {
       log.info("end tweet.");

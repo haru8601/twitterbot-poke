@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 public class PokedexChecker {
 	private final ResourcePathConfig resourcePathConfig;
 
-	public void check() {
+	public boolean check() {
 		log.info("start checking pokedex");
 		List<PokedexDto> pokeList = MapperUtils.readJsonAsList(resourcePathConfig.getPokedex(),
 				new TypeReference<List<PokedexDto>>() {
@@ -37,5 +37,6 @@ public class PokedexChecker {
 			}
 		}
 		log.info("end checking pokedex");
+		return true;
 	}
 }

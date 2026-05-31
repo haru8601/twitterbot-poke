@@ -50,6 +50,6 @@ out/
 .vscode/
 
 ### application ###
-.env
+.env*
 userInfo.json
 token.json

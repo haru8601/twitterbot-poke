@@ -20,7 +20,7 @@ public class Tweets {
 
 	/**
 	 * 通常ツイート
-	 * 
+	 *
 	 * @param apiInstance APIインスタンス
 	 * @param text        ツイート文
 	 * @return true: ツイート成功, false: ツイート失敗
@@ -55,7 +55,7 @@ public class Tweets {
 
 	/**
 	 * リプライ
-	 * 
+	 *
 	 * @param apiInstance      APIインスタンス
 	 * @param text             ツイート文
 	 * @param replyTargetTweet リプライ対象
@@ -98,7 +98,7 @@ public class Tweets {
 
 	/**
 	 * ツイート検索
-	 * 
+	 *
 	 * @param apiInstance APIインスタンス
 	 * @param query       検索クエリ
 	 * @return 検索結果
@@ -126,7 +126,7 @@ public class Tweets {
 
 	/**
 	 * ツイートいいね
-	 * 
+	 *
 	 * @param apiInstance APIインスタンス
 	 * @param tweetId     対象ツイートID
 	 * @param myId        個人ID

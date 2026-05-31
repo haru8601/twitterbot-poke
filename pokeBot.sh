@@ -1,2 +1,2 @@
 cd /root/pokeBot
-java -jar ./PokeBot-0.0.1-SNAPSHOT.jar &
+java -jar ./PokeBot-0.0.1-SNAPSHOT.jar --spring.profiles.active=production &
