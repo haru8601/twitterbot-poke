@@ -16,7 +16,12 @@
 | Ascii Tree Generator | 1.2.4      | markdown でのファイル tree 生成(VSCode 拡張機能) |
 | Text Tables          | 0.1.5      | markdown でのテーブル編集(VSCode 拡張機能)       |
 
-<br>
+## 開発
+
+### ローカルから実行
+
+[application.yaml](./src/main/resources/application.yaml)の`batch.cron`を直後の時間になるよう設定し、 \
+VSCode拡張の `Spring Boot Dashboard` > `PokeBot` > `Run` > `PokeBotApplication`
 
 ## 運用
 
@@ -36,40 +41,51 @@ security add-generic-password -s pokeBot -a clientSecret -U -w
 security find-generic-password -s pokeBot -a clientId -w
 ```
 
-tweet検索
+### 認可取得
+
+Developer Console > Agent から `generate_oauth2_user_token`を依頼
+
+### 認可取り消し
+
+Developer Console > Agent から
+`revoke_oauth2_user_token`を依頼
+
+### tweet検索
 
 ```sh
 bearerToken=$(security find-generic-password -s pokeBot -a bearerToken -w)
 curl "https://api.x.com/2/tweets/search/recent?query=from%3Aharoot_net" -H "Authorization: Bearer ${bearerToken}"  | jq
 ```
 
-code取得用URL生成
+### code取得用URL生成
+
+1. ブラウザからXに**bot用アカウントで**ログインしておく
+2. 下記を実行
 
 ```sh
+# ローカルPCにclientIdを設定
+security add-generic-password -s pokeBot -a clientId -U -w
+# コード取得用URLを生成
 sh script/generate-code-url.sh
 ```
 
-accessToken取得
-Developer Console > Agent で`generate_oauth2_user_token`を実行させる
+### accessToken取得
+
+Developer Console と ツイートアカウントが異なる場合、
+Developer ConsoleのAgentでは難しいため手動でアクセストークン取得を行う必要がある。
+
+```sh
+# 環境変数設定
+security add-generic-password -s pokeBot -a clientId -U -w
+security add-generic-password -s pokeBot -a clientSecret -U -w
+
+# 認可取得で生成されたパラメータの設定
+codeVerifier=code取得時に生成された値 \
+code=code取得時に生成された値 \
+./generate-oauth2-token.sh
+```
 
 ### 以下古いtwitterAPIのデータ取得方法メモ
-
-accessToken取得
-```sh
-codeVerifier=code取得時に生成されたランダムな文字列
-code=code取得で得た値
-
-clientId=$(security find-generic-password -s pokeBot -a clientId -w)
-clientSecret=$(security find-generic-password -s pokeBot -a clientSecret -w)
-echo "curl -X POST 'https://api.x.com/2/oauth2/token' \
--u '${clientId}:${clientSecret}' \
---header 'Content-Type: application/x-www-form-urlencoded' \
---data-urlencode 'code=${code}' \
---data-urlencode 'grant_type=authorization_code' \
---data-urlencode 'client_id=${clientId}' \
---data-urlencode 'redirect_uri=https://haroot.net/twitter-auth' \
---data-urlencode 'code_verifier=${codeVerifier}'"
-```
 
 refreshToken生成
 
@@ -143,21 +159,21 @@ Tasks > build > bootJar を実行
 .
 ├── batch
 │   └── cron
-│       └── tweet # 0 0 20 * * *
+│       └── tweet
 ├── file-path
 │   └── resources
-│       ├── base-url # src/main/resources/static
-│       ├── token # /token.json
-│       └── pokedex # /pokedex.json
+│       ├── base-url
+│       ├── token
+│       └── pokedex
 ├── path
 │   └── log
-│       ├── all # /hoge/log/app.log
-│       └── error # /hoge/log/app-error.log
+│       ├── all
+│       └── error
 └── user-info
-    ├── my-id # 1234567890123456789
-    ├── client-id # XXXXXZZZZZaaaaa00000xxxxxYYYYXXXXX
-    ├── client-secret # 略
-    ├── bearer # 略
-    ├── redirect-url # https://haroot.net
-    └── access-scope # offline.access tweet.read tweet.write users.read like.write
+    ├── my-id
+    ├── client-id
+    ├── client-secret
+    ├── bearer
+    ├── redirect-url
+    └── access-scope
 ```
