@@ -85,6 +85,12 @@ code=code取得時に生成された値 \
 ./generate-oauth2-token.sh
 ```
 
+#### 注意
+おそらく1分以内くらいにミスせず成功させないとエラーになる
+```json
+{"error":"invalid_request","error_description":"Value passed for the authorization code was invalid."}
+```
+
 ### 以下古いtwitterAPIのデータ取得方法メモ
 
 refreshToken生成
