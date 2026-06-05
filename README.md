@@ -4,18 +4,6 @@
 機能の詳細は[こちら](https://haroot.net/poke/bot)。<br>
 <br>
 
-## 技術要素
-
-| 技術                 | バージョン | description                                      |
-| -------------------- | ---------- | ------------------------------------------------ |
-| Java                 | 17.0.3     | 開発言語                                         |
-| Spring Boot          | 3.0.1      | フレームワーク                                   |
-| Gradle               | 7.6        | Java 用ビルドツール                              |
-| SpringToolSuite      | 4.14.0     | Eclipse を拡張した Spring 用開発ツール           |
-| twitter-api-java-sdk | 2.0.3      | twitter-api の Java 用 SDK                       |
-| Ascii Tree Generator | 1.2.4      | markdown でのファイル tree 生成(VSCode 拡張機能) |
-| Text Tables          | 0.1.5      | markdown でのテーブル編集(VSCode 拡張機能)       |
-
 ## 開発
 
 ### ローカルから実行
@@ -23,10 +11,41 @@
 [application.yaml](./src/main/resources/application.yaml)の`batch.cron`を直後の時間になるよう設定し、 \
 VSCode拡張の `Spring Boot Dashboard` > `PokeBot` > `Run` > `PokeBotApplication`
 
+### application.yaml
+
+下記のプロパティを含む必要があります。
+
+```sh
+.
+├── batch
+│   └── cron
+│       └── tweet
+├── file-path
+│   └── resources
+│       ├── base-url
+│       ├── token
+│       └── pokedex
+├── path
+│   └── log
+│       ├── all
+│       └── error
+└── user-info
+    ├── my-id
+    ├── client-id
+    ├── client-secret
+    ├── bearer
+    ├── redirect-url
+    └── access-scope
+```
+
+### Datadog APM
+
+jar実行時に引数でサーバー上に配置された`dd-java-agent.jar`をjavaagentとして指定。
+実行状況がdatadog上に連携される。
+
 ## 運用
 
 ### twitter(X)API
-
 
 macOSでのキーチェーンアクセス(tips)
 
@@ -156,30 +175,3 @@ Tasks > build > bootJar を実行
 本番環境の`/root/pokeBot/PokeBot-0.0.1-SNAPSHOT.jar`を上書きする。
 
 ([pokeBot.sh](./pokeBot.sh)がcronでjarを実行する)
-
-## application.yaml
-
-下記のプロパティを含む必要があります。
-
-```sh
-.
-├── batch
-│   └── cron
-│       └── tweet
-├── file-path
-│   └── resources
-│       ├── base-url
-│       ├── token
-│       └── pokedex
-├── path
-│   └── log
-│       ├── all
-│       └── error
-└── user-info
-    ├── my-id
-    ├── client-id
-    ├── client-secret
-    ├── bearer
-    ├── redirect-url
-    └── access-scope
-```
