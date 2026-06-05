@@ -40,8 +40,23 @@ VSCode拡張の `Spring Boot Dashboard` > `PokeBot` > `Run` > `PokeBotApplicatio
 
 ### Datadog APM
 
-jar実行時に引数でサーバー上に配置された`dd-java-agent.jar`をjavaagentとして指定。
+jar実行時に引数でサーバー上に配置された`dd-java-agent.jar`をjavaagentとして指定。\
 実行状況がdatadog上に連携される。
+
+#### ログ設定
+
+- `/etc/datadog-agent/datadog.yaml`で、`logs_enabled`をtrueにしている。
+- `/etc/datadog-agent/conf.d/pokebot.d/config.yaml`でログの取得元を指定している。
+  - 参考: [カスタムログの収集](https://docs.datadoghq.com/ja/agent/logs/?tab=tailfiles#%E3%82%AB%E3%82%B9%E3%82%BF%E3%83%A0%E3%83%AD%E3%82%B0%E5%8F%8E%E9%9B%86)
+
+#### 動作確認
+
+```sh
+# プロセスの動作確認
+systemctl status datadog-agent
+# datadog連携されるかの動作確認
+curl http://localhost:8080/tools/pokedex/check
+```
 
 ## 運用
 
@@ -175,3 +190,10 @@ Tasks > build > bootJar を実行
 本番環境の`/root/pokeBot/PokeBot-0.0.1-SNAPSHOT.jar`を上書きする。
 
 ([pokeBot.sh](./pokeBot.sh)がcronでjarを実行する)
+
+### 実行スクリプトのデプロイ
+[pokeBot.sh](./pokeBot.sh)をデプロイ後、
+
+```sh
+chmod u+x pokeBot.sh
+```
