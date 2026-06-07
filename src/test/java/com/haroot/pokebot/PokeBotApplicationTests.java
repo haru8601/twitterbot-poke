@@ -3,7 +3,7 @@ package com.haroot.pokebot;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+@SpringBootTest(classes = PokeBotApplication.class)
 class PokeBotApplicationTests {
 
 	@Test

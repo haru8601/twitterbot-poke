@@ -119,6 +119,8 @@ code=code取得時に生成された値 \
 ./generate-oauth2-token.sh
 ```
 
+`token.json`を手動更新する。
+
 #### 注意
 おそらく1分以内くらいにミスせず成功させないとエラーになる
 ```json
