@@ -1,7 +1,7 @@
 cd /root/pokeBot
 java \
-  -javaagent:/opt/datadog-packages/datadog-apm-library-java/stable/dd-java-agent.jar \
+  -javaagent:/opt/datadog-agent/client-agent/dd-java-agent.jar \
   -Ddd.service=pokebot \
   -Ddd.env=production \
-  -jar ./PokeBot-0.0.1-SNAPSHOT.jar --spring.profiles.active=production \
-  >> /var/log/pokeBot/pokeBot_sh.log 2>> /var/log/pokeBot/pokeBot_sh-error.log &
+  -jar ./PokeBot-1.0.0-SNAPSHOT.jar --spring.profiles.active=production \
+  >> /var/log/pokeBot/pokeBot_sh.log 2>> /var/log/pokeBot/pokeBot_sh-error.log

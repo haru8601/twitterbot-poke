@@ -187,9 +187,9 @@ curl --request POST -u${clientId}:${clientSecret} \
 VSCodeの`Gradle for Java`拡張で、
 Tasks > build > bootJar を実行
 
-[build/libs](./build/libs/)の`PokeBot-0.0.1-SNAPSHOT.jar`が更新される。
+[build/libs](./build/libs/)の`PokeBot-1.0.0-SNAPSHOT.jar`が更新される。
 
-本番環境の`/root/pokeBot/PokeBot-0.0.1-SNAPSHOT.jar`を上書きする。
+本番環境の`/root/pokeBot/PokeBot-1.0.0-SNAPSHOT.jar`を上書きする。
 
 ([pokeBot.sh](./pokeBot.sh)がcronでjarを実行する)
 
